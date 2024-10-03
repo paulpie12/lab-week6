@@ -22,8 +22,6 @@ public class Avoider : MonoBehaviour
     Timer avoidLoopTimer = new Timer();
     float maxTimer = 0.5f;
 
-    public delegate void VisualsDelegate(Vector3 startPos, Vector3 endPos, Color color, float range);
-
     private void OnDrawGizmos()
     {
         if (samples.Count > 0)
@@ -42,9 +40,6 @@ public class Avoider : MonoBehaviour
 
     void Start()
     {
-        // assigns DrawRay to VisualsDelegate
-        VisualsDelegate VDhandler = DrawRay;
-
         agent = GetComponent<NavMeshAgent>();
         pos = transform.position;
 
@@ -77,6 +72,7 @@ public class Avoider : MonoBehaviour
 
         if(timerStatus == 0)
         {
+            FindSpots();
             AvoidLoop();
         }
     }
@@ -102,7 +98,7 @@ public class Avoider : MonoBehaviour
             // Perform the raycast and log if anything is hit
             if (Physics.Raycast(ray, out hit, Range))
             {
-                Debug.Log("Hit: " + hit.collider.gameObject.name);
+                //Debug.Log("Hit: " + hit.collider.gameObject.name);
                 if(!CheckVisibility(Spotter.transform.position, targetPoint))
                 {
                     samples.Add(point); // Only adds samples not visible to the Spotter
@@ -111,6 +107,7 @@ public class Avoider : MonoBehaviour
 
             // Visualize the ray in the Scene and Game view using Debug.DrawRay
             DrawRay(this.transform.position, (targetPoint - this.transform.position).normalized * Range, Color.green, 0.5f);
+            //Debug.Log(samples.Count);
         }
     }
 
@@ -171,31 +168,31 @@ public class Avoider : MonoBehaviour
     // Moves to that spot
     void FindClosestSpot()
     {
-        Vector3 closestSpot = (Vector3)samples[0];
-        //Debug.Log("current position: " + transform.position);
-
         // Searches for the closest sample in samples
-        foreach(Vector2 sample in samples)
+        if(samples.Count > 0)
         {
-            Vector3 sample3D = (Vector3)sample;
-            if(Vector3.Distance(transform.position, sample3D) < Vector3.Distance(transform.position, closestSpot))
+            Vector3 closestSpot = (Vector3)samples[0];
+
+            foreach(Vector2 sample in samples)
             {
-                // Checks if Spotter can see the sample, uses that spot if not
-                if(!CheckVisibility(Spotter.transform.position, sample3D))
+                Vector3 sample3D = (Vector3)sample;
+                if(Vector3.Distance(transform.position, sample3D) < Vector3.Distance(transform.position, closestSpot))
                 {
-                    closestSpot = sample3D;
+                    // Checks if Spotter can see the sample, uses that spot if not
+                    if(!CheckVisibility(Spotter.transform.position, sample3D))
+                    {
+                        closestSpot = sample3D;
+                    }
                 }
             }
-        }
 
-        // Moves this object to closestSpot
-        agent.SetDestination(closestSpot);
-        
-        //Debug.Log("closest spot found: " + closestSpot);
+            // Moves this object to closestSpot
+            agent.SetDestination(closestSpot);
+        }
     }
     #endregion
 
-    #region Delegate Methods
+    #region Debug Methods
     void DrawRay(Vector3 startPos, Vector3 endPos, Color color, float range)
     {
         if(Visuals == true)
