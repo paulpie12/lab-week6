@@ -9,9 +9,10 @@ public class Avoider2 : MonoBehaviour
     public bool Visuals = true;
     public int searchAreaSize = 10;
     public float searchCellSize = 0.3f;
-    public float maxDistance = 5f;
+    public float speed = 10f;
 
     float Range = 20f;
+    float maxDistance = 5f;
 
     NavMeshAgent agent;
 
@@ -22,16 +23,21 @@ public class Avoider2 : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+
+        NoErrors(1);
     }
 
     // Update is called once per frame
     void Update()
     {
-        int timerStatus = avoidLoopTimer.LoopingTimer(maxTimer);
-
-        if(timerStatus == 0)
+        if(NoErrors(0))
         {
-            FindHidingSpot();
+            int timerStatus = avoidLoopTimer.LoopingTimer(maxTimer);
+
+            if(timerStatus == 0)
+            {
+                FindHidingSpot();
+            }
         }
     }
 
@@ -65,6 +71,10 @@ public class Avoider2 : MonoBehaviour
                 }
             }
 
+            if(agent.speed != speed)
+            {
+                agent.speed = speed;
+            }
             agent.SetDestination(closestSpot);
         }
     }
@@ -95,6 +105,38 @@ public class Avoider2 : MonoBehaviour
         if(Visuals == true)
         {
             Debug.DrawRay(startPos, endPos, color, range);
+        }
+    }
+
+    // Checks for possible errors, prints them if shouldPrint != 0
+    bool NoErrors(int shouldPrint)
+    {
+        if (agent == null)
+        {
+            PrintError("No NavMeshAgent component found", shouldPrint);
+            return false;
+        }
+        else if (!agent.isOnNavMesh)
+        {
+            PrintError("No NavMesh Surface found. Please bake a NavMesh", shouldPrint);
+            return false;
+        }
+
+        if (Spotter == null)
+        {
+            PrintError("No Spotter GameObject found", shouldPrint);
+            return false;
+        }
+
+        return true;
+    }
+
+    // Prints a warning message in console. Doesn't print if shouldPrint == 0
+    void PrintError(string message, int shouldPrint)
+    {
+        if(shouldPrint != 0)
+        {
+            Debug.LogWarning(message);
         }
     }
     #endregion

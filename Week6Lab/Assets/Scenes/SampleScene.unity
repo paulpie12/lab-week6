@@ -241,6 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e554261bf0de89a40bd2eaf2b454aae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 3
 --- !u!54 &653319076
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -467,7 +468,6 @@ GameObject:
   - component: {fileID: 974268331}
   - component: {fileID: 974268330}
   - component: {fileID: 974268336}
-  - component: {fileID: 974268334}
   - component: {fileID: 974268335}
   - component: {fileID: 974268337}
   m_Layer: 0
@@ -563,22 +563,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &974268334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 974268329}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d22184b053075ca479c7f6f1153e3a5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Spotter: {fileID: 653319070}
-  Range: 20
-  Visuals: 1
-  sampleRadius: 0.3
 --- !u!195 &974268335
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -637,14 +621,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 974268329}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae7f8e7ca7ae3ec4ab3f3af5202129b7, type: 3}
+  m_Script: {fileID: 436997044, guid: 1313620c46ef2864ea87ce3764aeab30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Spotter: {fileID: 653319070}
   Visuals: 1
   searchAreaSize: 10
   searchCellSize: 0.3
-  maxDistance: 5
+  speed: 3
 --- !u!1 &1440559425
 GameObject:
   m_ObjectHideFlags: 0
